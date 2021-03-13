@@ -18,15 +18,26 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+app.get("/api/timestamp/", (req, res) => {
+  res.json({ unix: Date.now(), utc: Date() });
+});
+
 app.get("/api/timestamp/:tim", (req, res) =>{
   var cur = new Date(req.params.tim);
   if (/\d{5,}/.test(req.params.tim)) 
     cur = new Date(parseInt(req.params.tim));
-    
-  res.json({
-    unix: cur.valueOf(),
-    utc: cur.toUTCString()
-  });
+
+  if(Date.parse(cur)){
+    res.json({
+      unix: cur.valueOf(),
+      utc: cur.toUTCString()
+    });
+  }
+  else{
+    res.json({
+      error: 'Invalid date',
+    });
+  }
 });
 
 // listen for requests :)
